@@ -1,24 +1,36 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "@/views/Login.vue";
-//全局样式表
-import "@/assets/global.css";
-//iconfont图标字体
-import "@/assets/icon/iconfont.css";
-//axios
-import axios from "axios";
-axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/";
-Vue.prototype.$http = axios;
+import Home from "@/views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   { path: "/", redirect: "/login" },
-  { path: "/login", component: Login },
+  {
+    path: "/login",
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      if (window.sessionStorage.getItem("token")) return next("/home");
+      next();
+    },
+  },
+  { path: "/home", component: Home },
 ];
 
 const router = new VueRouter({
   routes,
+});
+
+//路由的全局前置守卫
+router.beforeEach((to, from, next) => {
+  //to 目标路由
+  //from 从哪个路由来
+  //next next()为放行，next(false)为中断当前导航,next("/")强制跳转到"/"路由
+  if (to.path === "/login") return next();
+  const tokenStr = window.sessionStorage.getItem("token");
+  if (!tokenStr) return next("/login");
+  next();
 });
 
 export default router;

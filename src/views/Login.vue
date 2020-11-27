@@ -32,19 +32,19 @@ export default {
         return {
             //登录表单数据绑定对象
             loginForm:{
-                username:"",
-                password:""
+                username:"admin",
+                password:"123456"
             },
             loginFormRules:{
                 //用户名验证规则
                 username:[
                     { required:true, message:"用户名不能为空", trigger:"blur"},
-                    { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+                    { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur'}
                 ],
                 //密码验证规则
                 password:[
                     { required:true, message:"密码不能为空", trigger:"blur"},
-                    { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur'}
+                    { min: 6, max: 15, message: '密码长度在 6 到 15 个字符', trigger: 'blur'}
                 ]
             }
         }
@@ -61,9 +61,14 @@ export default {
                 // console.log(valid);  //这是验证的状态
                 // console.log(obj)     //这是验证失败的具体原因,true则为undefined
                 if(!valid) return;
-               const {data:a} = await this.$http.post("login",this.loginForm);
-               if(!200<=a.meta.status<=300){console.log(a.meta.msg);return};
-               console.log(a.meta.msg)
+                const {data:a} = await this.$http.post("login",this.loginForm);
+                if(a.meta.status!=200){
+                   this.$message.error(a.meta.msg)
+                }else{
+                    this.$message.success("登陆成功");
+                    window.sessionStorage.setItem("token",a.data.token);
+                    this.$router.push("/home");
+                };
             })
         }
     },
