@@ -8,7 +8,11 @@ import "@/assets/global.css";
 import "@/assets/icon/iconfont.css";
 //axios
 import axios from "axios";
-axios.defaults.baseURL = "http://119.45.48.253:8888/api/private/v1/";
+axios.interceptors.request.use((config) => {
+  config.baseURL = "http://119.45.48.253:8888/api/private/v1/";
+  config.headers.Authorization = window.sessionStorage.getItem("token");
+  return config;
+});
 Vue.prototype.$http = axios;
 
 Vue.config.productionTip = false;
