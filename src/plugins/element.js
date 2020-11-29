@@ -24,6 +24,7 @@ import {
   Tooltip,
   Pagination,
   Dialog,
+  MessageBox,
 } from "element-ui";
 
 Vue.use(Button);
@@ -51,3 +52,5 @@ Vue.use(Pagination);
 Vue.use(Dialog);
 //Message需要像axios一样封装
 Vue.prototype.$message = Message;
+//封装 MessageBox
+Vue.prototype.$confirm = MessageBox.confirm;
