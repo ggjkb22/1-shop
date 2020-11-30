@@ -25,7 +25,7 @@
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
                 <el-table-column label="电话" prop="mobile"></el-table-column>
-                <el-table-column label="角色名" prop="role_name"></el-table-column>
+                <el-table-column label="角色" prop="role_name"></el-table-column>
                 <el-table-column label="创建时间">
                     <template slot-scope="scope">
                         {{transitionTime(scope.row.create_time)}}
@@ -45,7 +45,7 @@
                             <el-button @click="removeUserById(scope.row.id)" type="danger" icon="el-icon-delete" size="mini"></el-button>
                         </el-tooltip>
                         <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false" :open-delay="parseInt(500)">
-                            <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+                            <el-button type="warning" icon="el-icon-setting" size="mini" @click="showAllotDialog(scope.row)"></el-button>
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -108,6 +108,31 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="editUser">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 分配用户对话框 -->
+        <el-dialog 
+        title="分配角色"
+        :visible.sync="allotDialogVisible"
+        width="50%"
+        @close="allotDiglogClosed">
+            <div>
+                <p>当前用户：{{userInfo.username}}</p>
+                <p>当前角色：{{userInfo.role_name}}</p>
+                <p>分配新角色：
+                    <el-select v-model="selectRoleId" placeholder="请选择">
+                        <el-option
+                        v-for="item in rolesList"
+                        :key="item.id"
+                        :label="item.roleName"
+                        :value="item.id">
+                        </el-option>
+                    </el-select>
+                </p>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="allotDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -189,7 +214,15 @@ export default {
                     {required:true,message:"请输入手机号",trigger:"blur"},
                     {validator:checkMobile,trigger:"blur"},
                 ]
-            }
+            },
+            /* 分配角色对话框是否显示 */
+            allotDialogVisible:false,
+            /* 需要被分配角色的用户信息 */
+            userInfo:{},
+            /* 所有角色的数据列表 */
+            rolesList:[],
+            /* 选中的角色的ID */
+            selectRoleId:""
         }
     },
     created(){
@@ -284,6 +317,30 @@ export default {
                 this.$message.success("删除用户成功");
                 this.getUserList()
             }
+        },
+        /* 分配角色对话框显示事件 */
+        async showAllotDialog(userInfo){
+            this.userInfo = userInfo;
+            /* 在展示对话框之前获取所有角色列表 */
+            const {data:res} = await this.$http.get("roles");
+            if(res.meta.status !== 200) return this.$message.error("获取角色列表失败");
+            this.rolesList = res.data;
+            console.log(this.rolesList);
+            this.allotDialogVisible =true;
+        },
+        /* 点击按钮，分配角色 */
+        async saveRoleInfo(){
+            if(!this.selectRoleId) return this.$message.error("请先选择要分配的角色");
+            const {data:res}=await this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectRoleId});
+            if(res.meta.status !==200) return this.$message.error("分配角色失败");
+            this.$message.success("分配角色成功");
+            this.allotDialogVisible =false;
+            this.getUserList()
+        },
+        /* 分配角色对话框关闭事件 */
+        allotDiglogClosed(){
+            this.selectRoleId = "";
+            this.userInfo={}
         }
     }
 }
