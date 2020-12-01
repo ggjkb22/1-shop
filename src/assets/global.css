@@ -20,3 +20,9 @@ body,
 .el-tag {
   margin: 7px;
 }
+.el-cascader__dropdown {
+  height: 200px;
+}
+.el-cascader-panel {
+  height: 200px;
+}
