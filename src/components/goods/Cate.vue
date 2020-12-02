@@ -16,16 +16,16 @@
             </el-row>
             <!-- 表格区域 -->
             <tree-table class="treeTable" :data="cateList" :columns="columns" :selection-type="false" :expand-type="false" show-index index-text="#" border :show-row-hover="false">
-                <template slot="isok" scope="scope">
+                <template slot="isok" slot-scope="scope">
                     <i class="el-icon-success" v-if="!scope.row.car_deleted"></i>
                     <i class="el-icon-error" v-else></i>
                 </template>
-                <template slot="order" scope="scope">
+                <template slot="order" slot-scope="scope">
                     <el-tag type="danger" v-if="scope.row.cat_level===0">一级</el-tag>
                     <el-tag v-else-if="scope.row.cat_level===1">二级</el-tag>
                     <el-tag type="success" v-else>三级</el-tag>
                 </template>
-                <template slot="opt" scope="scope">
+                <template slot="opt" slot-scope="scope">
                     <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditCateDialog(scope.row)">编辑</el-button>
                     <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeCateById(scope.row)">删除</el-button>
                 </template>
@@ -43,7 +43,7 @@
         </el-card>
         <!-- 添加分类对话框 -->
         <el-dialog
-            title="提示"
+            title="添加分类"
             :visible.sync="addCateDialogVisible"
             width="50%"
             @close="addCateDialogClosed">
@@ -56,13 +56,11 @@
                          props指定数据对象 
                          v-model绑定的必须是一个数组-->
                     <el-cascader
-                        expand-trigger="hover"
                         v-model="cateValue"
                         :options="parentCateList"
                         :props="parentCateProps"
                         @change="handleChange"
-                        clearable
-                        change-on-select></el-cascader>
+                        clearable></el-cascader>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -72,7 +70,7 @@
         </el-dialog>
         <!-- 编辑分类对话框 -->
         <el-dialog
-            title="提示"
+            title="编辑分类"
             :visible.sync="editCateDialogVisible"
             width="50%"
             @close="editCateDialogClosed">
@@ -134,6 +132,8 @@ export default {
             cateValue:[],
             /* 级联选择器的配置 */
             parentCateProps:{
+                checkStrictly:true,
+                expandTrigger:"hover",
                 value:"cat_id",
                 label:"cat_name",
                 children:"children"
