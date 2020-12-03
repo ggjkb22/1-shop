@@ -28,10 +28,10 @@
                 <el-table-column label="角色" prop="role_name"></el-table-column>
                 <el-table-column label="创建时间">
                     <template slot-scope="scope">
-                        {{transitionTime(scope.row.create_time)}}
+                        {{scope.row.create_time |dateFormat}}
                     </template>
                 </el-table-column>
-                <el-table-column label="状态">
+                <el-table-column label="状态" width="60px">
                     <template slot-scope="scope">
                         <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
                     </template>
@@ -257,14 +257,6 @@ export default {
             }else{
                 this.$message.success("更新用户状态成功")
             }
-        },
-        /* 转换时间 */
-        transitionTime(time){
-            let date = new Date(parseInt(time));
-            let year = date.getFullYear();
-            let mon = date.getMonth()+1;
-            let day = date.getDate();
-            return year + "." + mon + "." + day
         },
         /* 监听添加用户对话框关闭时的事件 */
         addDialogClosed(){

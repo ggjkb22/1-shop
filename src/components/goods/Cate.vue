@@ -123,7 +123,7 @@ export default {
             /* 添加分类规则 */
             addCateFormRules:{
                 cat_name:[
-                    {required:true,message:"请输入分类名称",tigger:"blur"}
+                    {required:true,message:"请输入分类名称",trigger:"blur"}
                 ]
             },
             /* 父级分类列表 */
@@ -148,7 +148,7 @@ export default {
             /* 编辑分类规则 */
             editCateFormRules:{
                 cat_name:[
-                    {required:true,message:"请输入分类名称",tigger:"blur"}
+                    {required:true,message:"请输入分类名称",trigger:"blur"}
                 ]
             }
         }

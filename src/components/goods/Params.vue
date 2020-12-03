@@ -162,7 +162,7 @@ export default {
             /* 添加参数的规则 */
             addParamsRules:{
                 arrt_name:[
-                    {required:true,message:"请输入参数名称",tigger:"blur"},
+                    {required:true,message:"请输入参数名称",trigger:"blur"},
                     {min:1,max:15,message:"参数名称为 1~15 个字符"}
                 ]
             },
@@ -176,7 +176,7 @@ export default {
             /* 修改参数的规则 */
             editParamsRules:{
                 attr_name:[
-                    {required:true,message:"请输入参数名称",tigger:"blur"},
+                    {required:true,message:"请输入参数名称",trigger:"blur"},
                     {min:1,max:15,message:"参数名称为 1~15 个字符"}
                 ]
             },
