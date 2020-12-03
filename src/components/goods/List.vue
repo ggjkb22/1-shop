@@ -32,7 +32,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="130px">
                     <template v-slot="scope">
-                        <el-button type="primary" icon="el-icon-edit" size="mini" ></el-button>
+                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="editGoods(scope.row)"></el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeGoodsById(scope.row)"></el-button>
                     </template>
                 </el-table-column>
@@ -48,6 +48,33 @@
                     :total="total">
                 </el-pagination>
         </el-card>
+        <!-- 编辑商品对话框 -->
+        <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="50%">
+            <el-form :model="dialogVisibleForm" :rules="dialogVisibleRules" ref="dialogVisibleRef" label-width="100px">
+                <el-form-item label="商品名称" prop="goods_name">
+                    <el-input v-model="dialogVisibleForm.goods_name"></el-input>
+                </el-form-item>
+                <el-form-item label="商品价格" prop="goods_price">
+                    <el-input v-model="dialogVisibleForm.goods_price"></el-input>
+                </el-form-item>
+                <el-form-item label="商品重量" prop="goods_weight">
+                    <el-input v-model="dialogVisibleForm.goods_weight"></el-input>
+                </el-form-item>
+                <el-form-item label="商品数量" prop="goods_number">
+                    <el-input v-model="dialogVisibleForm.goods_number"></el-input>
+                </el-form-item>
+                <el-form-item label="商品介绍" prop="goods_introduce">
+                    <el-input v-model="dialogVisibleForm.goods_introduce" type="textarea"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="edit">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -64,7 +91,35 @@ export default {
             /* 商品列表 */
             goodsList:[],
             /* 总数据条数 */
-            total:0
+            total:0,
+            /* 编辑商品对话框显示 */
+            dialogVisible:false,
+            /* 编辑参数表单数据 */
+            dialogVisibleForm:{
+                goods_name:"",
+                goods_price:0,
+                goods_weight:0,
+                goods_number:0,
+                goods_introduce:""
+            },
+            /* 编辑参数规则 */
+            dialogVisibleRules:{
+                goods_name:[
+                    {required:true,message:"请输入商品名称",trigger:"blur"},
+                    {min:1,max:35,message:"商品名称为 1~35 个字符"},
+                ],
+                goods_price:[
+                    {required:true,message:"请输入商品价格",trigger:"blur"},
+                ],
+                goods_weight:[
+                    {required:true,message:"请输入商品重量",trigger:"blur"},
+                ],
+                goods_number:[
+                    {required:true,message:"请输入商品数量",trigger:"blur"},
+                ]
+            },
+            /* 当前商品ID */
+            currentGoodsId:0
         }
     },
     created(){
@@ -104,6 +159,26 @@ export default {
                 this.$message.success("删除商品成功");
                 this.getGoodsList()
             }
+        },
+        /*  编辑商品  */
+        async editGoods(row){
+            const {data:res} =await this.$http.get(`goods/${row.goods_id}`);
+            if(res.meta.status !==200) return this.$message.error("获取当前商品信息失败");
+            this.dialogVisibleForm.goods_name = res.data.goods_name;
+            this.dialogVisibleForm.goods_price = res.data.goods_price;
+            this.dialogVisibleForm.goods_weight = res.data.goods_weight;
+            this.dialogVisibleForm.goods_number = res.data.goods_number;
+            this.dialogVisibleForm.goods_introduce = res.data.goods_introduce;
+            this.currentGoodsId = res.data.goods_id;
+            this.dialogVisible = true;
+        },
+        /* 编辑商品确认事件 */
+        edit(){
+            this.$refs.dialogVisibleRef.validate(async valid=>{
+                if(!valid) return;
+                const {data:res} = await this.$http.put(`goods/${this.currentGoodsId}`,this.dialogVisibleForm);
+                if(res.meta.status !==201) return this.$message.info("抱歉，编辑商品功能正在开发中！")
+            })
         },
         /* go添加商品页面 */
         goAddPage(){
