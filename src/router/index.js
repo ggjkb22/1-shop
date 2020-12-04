@@ -37,11 +37,7 @@ const routes = [
       { path: "/params", component: Params },
       { path: "/goods", component: GoodsList },
       { path: "/goods/add", component: Add },
-<<<<<<< HEAD
       { path: "/orders", component: Orders },
-=======
-      { path: "/Orders", component: Orders },
->>>>>>> order
     ],
   },
 ];
