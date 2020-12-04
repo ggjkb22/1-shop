@@ -1,17 +1,43 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Login from "@/views/Login.vue";
-import Home from "@/views/Home.vue";
-import Welcome from "@/components/Welcome.vue";
-import Users from "@/components/user/Users.vue";
-import Roles from "@/components/right/Roles.vue";
-import Rights from "@/components/right/Rights.vue";
-import Cate from "@/components/goods/Cate.vue";
-import Params from "@/components/goods/Params.vue";
-import GoodsList from "@/components/goods/List.vue";
-import Add from "@/components/goods/Add.vue";
-import Orders from "@/components/order/Orders.vue";
-import Reports from "@/components/report/Reports.vue";
+//路由懒加载
+const Login = () =>
+  import(/* webpackChunkName: "login_home_welcome" */ "@/views/Login.vue");
+// import Home from "@/views/Home.vue";
+const Home = () =>
+  import(/* webpackChunkName: "login_home_welcome" */ "@/views/Home.vue");
+const Welcome = () =>
+  import(
+    /* webpackChunkName: "login_home_welcome" */ "@/components/Welcome.vue"
+  );
+const Users = () =>
+  import(
+    /* webpackChunkName: "users_roles_rights" */ "@/components/user/Users.vue"
+  );
+const Roles = () =>
+  import(
+    /* webpackChunkName: "users_roles_rights" */ "@/components/right/Roles.vue"
+  );
+const Rights = () =>
+  import(
+    /* webpackChunkName: "users_roles_rights" */ "@/components/right/Rights.vue"
+  );
+const Cate = () =>
+  import(/* webpackChunkName: "cate_params" */ "@/components/goods/Cate.vue");
+const Params = () =>
+  import(/* webpackChunkName: "cate_params" */ "@/components/goods/Params.vue");
+const GoodsList = () =>
+  import(/* webpackChunkName: "goods_add" */ "@/components/goods/List.vue");
+const Add = () =>
+  import(/* webpackChunkName: "goods_add" */ "@/components/goods/Add.vue");
+const Orders = () =>
+  import(
+    /* webpackChunkName: "orders_reports" */ "@/components/order/Orders.vue"
+  );
+const Reports = () =>
+  import(
+    /* webpackChunkName: "orders_reports" */ "@/components/report/Reports.vue"
+  );
 
 Vue.use(VueRouter);
 
