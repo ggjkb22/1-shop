@@ -19,11 +19,7 @@
             <!-- 订单列表数据 -->
             <el-table :data="orderList" border stripe>
                 <el-table-column type="index" label="#"></el-table-column>
-<<<<<<< HEAD
                 <el-table-column label="订单编号" prop="order_number" width="300px"></el-table-column>
-=======
-                <el-table-column label="订单编号" prop="order_number"></el-table-column>
->>>>>>> order
                 <el-table-column label="订单价格" prop="order_price"></el-table-column>
                 <el-table-column label="是否付款" prop="pay_status">
                     <template v-slot="scope">
@@ -38,11 +34,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
-<<<<<<< HEAD
                     <template>
-=======
-                    <template v-slot="scope">
->>>>>>> order
                         <el-button type="primary" icon="el-icon-edit" size="mini" @click="showBox"></el-button>
                         <el-button type="success" icon="el-icon-location" size="mini" @click="showProgressBox"></el-button>                            
                     </template>
